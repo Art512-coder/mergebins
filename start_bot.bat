@@ -1,0 +1,9 @@
+@echo off
+echo Starting BIN Search Credit Card Generator Bot...
+echo.
+echo Checking dependencies...
+pip install -r requirements_clean.txt --quiet
+echo.
+echo Starting bot...
+python BINSearchCCGbot.py
+pause
