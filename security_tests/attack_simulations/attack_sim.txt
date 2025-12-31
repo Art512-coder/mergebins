@@ -1,0 +1,344 @@
+"""
+Main test runner that executes all security tests.
+"""
+
+import asyncio
+import sys
+import os
+from datetime import datetime
+
+# Add the security_tests directory to Python path
+sys.path.append(os.path.dirname(__file__))
+
+from attack_simulations.attack_simulator import run_attack_simulations
+from security_validation.validation_tests import run_security_validation  
+from performance_tests.performance_tests import run_performance_tests
+
+async def run_all_security_tests():
+    """Run all security test suites."""
+    print("🛡️ CCG Bot Security Test Suite")
+    print("=" * 60)
+    print(f"Started at: {datetime.now()}")
+    print(f"Testing endpoint: http://localhost:8000")
+    print("=" * 60)
+    
+    try:
+        # 1. Security Validation (ensure legitimate users work)
+        print("\n🔍 PHASE 1: Security Validation Tests")
+        print("Ensuring legitimate users can access all features...")
+        await run_security_validation()
+        
+        print("\n⏱️  Waiting 5 seconds before attack simulations...")
+        await asyncio.sleep(5)
+        
+        # 2. Attack Simulations (test security blocking)
+        print("\n🚨 PHASE 2: Attack Simulation Tests")
+        print("Testing security against various attack vectors...")
+        await run_attack_simulations()
+        
+        print("\n⏱️  Waiting 5 seconds before performance tests...")
+        await asyncio.sleep(5)
+        
+        # 3. Performance Tests (service availability under attack)
+        print("\n⚡ PHASE 3: Performance Under Attack Tests")
+        print("Testing service performance and availability...")
+        await run_performance_tests()
+        
+        print("\n" + "=" * 60)
+        print("✅ ALL SECURITY TESTS COMPLETED!")
+        print("=" * 60)
+        
+        print("\n📋 SECURITY TEST SUMMARY:")
+        print("1. ✅ Legitimate user access - Should work normally")
+        print("2. 🛡️  Attack blocking - Should reject malicious requests")
+        print("3. ⚡ Performance - Should maintain availability under load")
+        print("4. 🚨 Check logs for any security events logged")
+        
+    except Exception as e:
+        print(f"\n❌ Security test suite failed: {e}")
+        return False
+    
+    return True
+
+if __name__ == "__main__":
+    # Make sure the backend is running
+    print("⚠️  IMPORTANT: Make sure your backend server is running on http://localhost:8000")
+    print("   Run: python webapp/backend/main_cloudflare.py")
+    print()
+    
+    input("Press Enter when your backend server is ready...")
+    
+    # Run all tests
+    success = asyncio.run(run_all_security_tests())
+    
+    if success:
+        print("\n🎉 Security testing completed successfully!")
+        exit(0)
+    else:
+        print("\n💥 Security testing failed!")
+        exit(1)"""
+Test various attack scenarios against your BIN/card generation service.
+These tests help validate that your security measures are working properly.
+"""
+
+import asyncio
+import aiohttp
+import time
+import random
+from typing import List, Dict
+import json
+
+class AttackSimulator:
+    def __init__(self, base_url: str = "http://localhost:8000"):
+        self.base_url = base_url
+        self.session = None
+    
+    async def __aenter__(self):
+        self.session = aiohttp.ClientSession()
+        return self
+    
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        if self.session:
+            await self.session.close()
+
+    async def simulate_bin_scraping_attack(self, bin_range: tuple = (400000, 500000), requests_per_second: int = 10):
+        """
+        Simulate a BIN database scraping attack.
+        This should be BLOCKED by your security system.
+        """
+        print("🚨 Simulating BIN Scraping Attack...")
+        results = {"success": 0, "blocked": 0, "errors": 0}
+        
+        for bin_num in range(bin_range[0], min(bin_range[0] + 100, bin_range[1])):  # Test first 100
+            try:
+                start_time = time.time()
+                
+                async with self.session.get(
+                    f"{self.base_url}/api/v1/bins/lookup/{bin_num}",
+                    headers={'User-Agent': 'Python-Script-Bot/1.0'}  # Obvious bot signature
+                ) as response:
+                    if response.status == 200:
+                        results["success"] += 1
+                        print(f"⚠️  BIN {bin_num}: Success (should be blocked!)")
+                    elif response.status == 403:
+                        results["blocked"] += 1
+                        print(f"✅ BIN {bin_num}: Blocked (good!)")
+                    elif response.status == 429:
+                        results["blocked"] += 1
+                        print(f"✅ BIN {bin_num}: Rate limited (good!)")
+                    else:
+                        results["errors"] += 1
+                        print(f"❓ BIN {bin_num}: Status {response.status}")
+                
+                # Control request rate
+                elapsed = time.time() - start_time
+                sleep_time = max(0, 1/requests_per_second - elapsed)
+                await asyncio.sleep(sleep_time)
+                
+            except Exception as e:
+                results["errors"] += 1
+                print(f"❌ BIN {bin_num}: Error - {e}")
+        
+        print(f"\n📊 BIN Scraping Attack Results:")
+        print(f"   Success: {results['success']} (should be 0)")
+        print(f"   Blocked: {results['blocked']} (should be high)")
+        print(f"   Errors: {results['errors']}")
+        
+        return results
+
+    async def simulate_card_generation_abuse(self, requests: int = 50):
+        """
+        Simulate mass card generation abuse.
+        Should be limited to 3 per IP per 24 hours.
+        """
+        print("🚨 Simulating Card Generation Abuse...")
+        results = {"success": 0, "blocked": 0, "errors": 0}
+        
+        for i in range(requests):
+            try:
+                payload = {
+                    "bin": "411111",
+                    "include_avs": False
+                }
+                
+                async with self.session.post(
+                    f"{self.base_url}/api/v1/cards/generate",
+                    json=payload,
+                    headers={'User-Agent': 'CardGenBot/2.0'}  # Bot signature
+                ) as response:
+                    if response.status == 200:
+                        results["success"] += 1
+                        print(f"⚠️  Card Gen {i+1}: Success (only first 3 should succeed)")
+                    elif response.status == 429:
+                        results["blocked"] += 1
+                        print(f"✅ Card Gen {i+1}: Rate limited (expected after 3)")
+                    elif response.status == 403:
+                        results["blocked"] += 1
+                        print(f"✅ Card Gen {i+1}: Security blocked (good!)")
+                    else:
+                        results["errors"] += 1
+                        print(f"❓ Card Gen {i+1}: Status {response.status}")
+                
+                await asyncio.sleep(0.1)  # Small delay
+                
+            except Exception as e:
+                results["errors"] += 1
+                print(f"❌ Card Gen {i+1}: Error - {e}")
+        
+        print(f"\n📊 Card Generation Abuse Results:")
+        print(f"   Success: {results['success']} (should be ≤3)")
+        print(f"   Blocked: {results['blocked']} (should be ≥47)")
+        print(f"   Errors: {results['errors']}")
+        
+        return results
+
+    async def simulate_crypto_wallet_scanning(self, wallet_count: int = 100):
+        """
+        Simulate rapid crypto wallet balance checking (suspicious behavior).
+        """
+        print("🚨 Simulating Crypto Wallet Scanning Attack...")
+        results = {"success": 0, "blocked": 0, "errors": 0}
+        
+        # Generate fake wallet addresses
+        bitcoin_addresses = [f"1{''.join(random.choices('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz', k=25))}" for _ in range(wallet_count)]
+        
+        for i, address in enumerate(bitcoin_addresses[:wallet_count]):
+            try:
+                payload = {
+                    "address": address,
+                    "crypto_type": "bitcoin"
+                }
+                
+                async with self.session.post(
+                    f"{self.base_url}/api/v1/crypto/check-balance",
+                    json=payload,
+                    headers={'User-Agent': 'CryptoScanner/1.0'}
+                ) as response:
+                    if response.status == 200:
+                        results["success"] += 1
+                        print(f"⚠️  Wallet {i+1}: Success (should be limited)")
+                    elif response.status == 429:
+                        results["blocked"] += 1
+                        print(f"✅ Wallet {i+1}: Rate limited (good!)")
+                    elif response.status == 403:
+                        results["blocked"] += 1
+                        print(f"✅ Wallet {i+1}: Security blocked (good!)")
+                    else:
+                        results["errors"] += 1
+                
+                # Rapid scanning pattern
+                await asyncio.sleep(0.05)  # Very fast requests
+                
+            except Exception as e:
+                results["errors"] += 1
+        
+        print(f"\n📊 Crypto Wallet Scanning Results:")
+        print(f"   Success: {results['success']} (should be limited)")
+        print(f"   Blocked: {results['blocked']} (should increase over time)")
+        print(f"   Errors: {results['errors']}")
+        
+        return results
+
+    async def simulate_fake_webhook_attack(self):
+        """
+        Simulate fake payment webhook attack.
+        Should be REJECTED due to missing/invalid signatures.
+        """
+        print("🚨 Simulating Fake Webhook Attack...")
+        results = {"success": 0, "blocked": 0, "errors": 0}
+        
+        fake_webhooks = [
+            {
+                "endpoint": "/api/v1/webhooks/coinbase-commerce",
+                "payload": {
+                    "id": "fake-charge-123",
+                    "resource": "charge",
+                    "resource_path": "/v1/charges/fake-charge-123",
+                    "type": "charge:confirmed",
+                    "api_version": "2018-03-22",
+                    "created_at": "2024-01-01T10:00:00Z",
+                    "data": {
+                        "id": "fake-charge-123",
+                        "pricing": {"local": {"amount": "10.00", "currency": "USD"}},
+                        "metadata": {"user_id": "1"}
+                    }
+                }
+            },
+            {
+                "endpoint": "/api/v1/webhooks/crypto-payment",
+                "payload": {
+                    "transaction_id": "fake-tx-456",
+                    "user_id": "1",
+                    "amount": "10.00",
+                    "currency": "USD",
+                    "status": "confirmed",
+                    "payment_method": "bitcoin",
+                    "timestamp": "2024-01-01T10:00:00Z"
+                }
+            }
+        ]
+        
+        for webhook in fake_webhooks:
+            try:
+                # Send webhook WITHOUT proper signature (should be rejected)
+                async with self.session.post(
+                    f"{self.base_url}{webhook['endpoint']}",
+                    json=webhook['payload'],
+                    headers={
+                        'Content-Type': 'application/json',
+                        'User-Agent': 'FakeWebhook/1.0'
+                    }
+                ) as response:
+                    if response.status == 200:
+                        results["success"] += 1
+                        print(f"⚠️  Fake webhook accepted (CRITICAL SECURITY ISSUE!)")
+                    elif response.status == 401:
+                        results["blocked"] += 1
+                        print(f"✅ Fake webhook rejected - missing signature (good!)")
+                    elif response.status == 403:
+                        results["blocked"] += 1
+                        print(f"✅ Fake webhook blocked - security (good!)")
+                    else:
+                        results["errors"] += 1
+                        print(f"❓ Webhook response: {response.status}")
+                
+            except Exception as e:
+                results["errors"] += 1
+                print(f"❌ Webhook error: {e}")
+        
+        print(f"\n📊 Fake Webhook Attack Results:")
+        print(f"   Success: {results['success']} (should be 0 - CRITICAL if >0)")
+        print(f"   Blocked: {results['blocked']} (should be 2)")
+        print(f"   Errors: {results['errors']}")
+        
+        return results
+
+# Test runner
+async def run_attack_simulations():
+    """
+    Run all attack simulations to test security.
+    """
+    print("🛡️ Starting Security Attack Simulations...")
+    print("=" * 50)
+    
+    async with AttackSimulator() as simulator:
+        # Test 1: BIN Scraping Attack
+        await simulator.simulate_bin_scraping_attack()
+        print("\n" + "=" * 50)
+        
+        # Test 2: Card Generation Abuse
+        await simulator.simulate_card_generation_abuse()
+        print("\n" + "=" * 50)
+        
+        # Test 3: Crypto Wallet Scanning
+        await simulator.simulate_crypto_wallet_scanning()
+        print("\n" + "=" * 50)
+        
+        # Test 4: Fake Webhook Attack
+        await simulator.simulate_fake_webhook_attack()
+        print("\n" + "=" * 50)
+    
+    print("✅ Attack simulations completed!")
+
+if __name__ == "__main__":
+    asyncio.run(run_attack_simulations())

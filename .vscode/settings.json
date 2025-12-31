@@ -1,0 +1,29 @@
+{
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "postcss.validate": false,
+  "css.customData": ["webapp/frontend/.vscode/css_custom_data.json"],
+  "tailwindCSS.experimental.classRegex": [
+    "class\\s*:\\s*[\"']([^\"']*)[\"']",
+    "className\\s*:\\s*[\"']([^\"']*)[\"']",
+    "class=[\"']([^\"']*)[\"']",
+    "className=[\"']([^\"']*)[\"']"
+  ],
+  "files.associations": {
+    "*.css": "postcss"
+  },
+  "emmet.includeLanguages": {
+    "vue-html": "html",
+    "vue": "html",
+    "postcss": "css"
+  },
+  "tailwindCSS.includeLanguages": {
+    "vue": "html",
+    "vue-html": "html",
+    "postcss": "css"
+  },
+  "tailwindCSS.rootFontSize": 16,
+  "tailwindCSS.showPixelEquivalents": true,
+  "tailwindCSS.hooverPreview": true
+}

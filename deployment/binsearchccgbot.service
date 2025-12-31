@@ -1,0 +1,13 @@
+[Unit]
+Description=BINSearchCCGBot Service
+After=network.target
+
+[Service]
+User=binbot
+WorkingDirectory=/home/binbot/binbot
+ExecStart=/home/binbot/binbot/venv/bin/python3 /home/binbot/binbot/BINSearchCCGbot.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

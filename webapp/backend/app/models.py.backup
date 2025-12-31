@@ -1,0 +1,102 @@
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Boolean, Enum  # Added Boolean, Enum
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.dialects.postgresql import JSON
+from datetime import datetime
+import enum
+
+Base = declarative_base()
+
+class UserTier(enum.Enum):
+    FREE = "free"
+    PREMIUM = "premium" 
+    API = "api"
+
+class ActionType(enum.Enum):
+    BIN_LOOKUP = "bin_lookup"
+    CARD_GENERATION = "card_generation" 
+    BULK_EXPORT = "bulk_export"
+    CRYPTO_BALANCE_CHECK = "crypto_balance_check"
+    WEBHOOK_PAYMENT = "webhook_payment"
+    SECURITY_EVENT = "security_event"
+
+class User(Base):
+    __tablename__ = "users"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    username = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    is_active = Column(Boolean, default=True)
+    is_verified = Column(Boolean, default=False)
+    tier = Column(Enum(UserTier), default=UserTier.FREE)
+    premium_expires_at = Column(DateTime, nullable=True)
+    api_key = Column(String, unique=True, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    usage_logs = relationship("UsageLog", back_populates="user")
+    payment_logs = relationship("PaymentLog", back_populates="user")
+
+class UsageLog(Base):
+    __tablename__ = "usage_logs"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)  # Nullable for anonymous users
+    action = Column(Enum(ActionType), nullable=False)
+    ip_address = Column(String(45), nullable=False)
+    user_agent = Column(String, nullable=True)
+    metadata = Column(JSON, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    user = relationship("User", back_populates="usage_logs")
+
+class PaymentLog(Base):
+    __tablename__ = "payment_logs"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    transaction_id = Column(String, unique=True, nullable=False)
+    amount = Column(Float, nullable=False)
+    currency = Column(String(10), default="USD")
+    payment_method = Column(String(50), nullable=False)  # coinbase, crypto, stripe
+    status = Column(String(20), nullable=False)  # pending, confirmed, failed
+    webhook_ip = Column(String(45))  # For security logging
+    raw_webhook_data = Column(JSON)  # Store raw webhook for debugging
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    user = relationship("User", back_populates="payment_logs")
+
+# BIN Data Model (for your 458K records)
+class BINRecord(Base):
+    __tablename__ = "bin_records"
+    
+    bin = Column(String(6), primary_key=True, index=True)
+    brand = Column(String(50), nullable=True)
+    type = Column(String(20), nullable=True)
+    category = Column(String(50), nullable=True)
+    issuer = Column(String(255), nullable=True)
+    country = Column(String(2), nullable=True)  # ISO country code
+    bank_phone = Column(String(50), nullable=True)
+    bank_url = Column(String(255), nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+# Security Events Model
+class SecurityEvent(Base):
+    __tablename__ = "security_events"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    event_type = Column(String(50), nullable=False)
+    ip_address = Column(String(45), nullable=False)
+    user_agent = Column(String, nullable=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    risk_score = Column(Integer, nullable=False, default=0)
+    event_data = Column(JSON, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    user = relationship("User")

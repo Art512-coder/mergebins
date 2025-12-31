@@ -1,0 +1,30 @@
+.env
+bot.log
+bot.out
+*.pyc
+__pycache__/
+node_modules
+
+# Security test outputs
+security_tests/reports/*.html
+security_tests/reports/*.json
+security_tests/logs/
+*.log
+
+# Test artifacts
+test_results/
+attack_logs/
+performance_data/
+
+# Sensitive test data
+test_webhooks_secret.txt
+test_api_keys.env
+# Large database files
+*.db
+*.sqlite
+*.sqlite-wal
+.wrangler/state/
+backups/
+
+# Large SQL import files
+deployment/all_bins_import.sql

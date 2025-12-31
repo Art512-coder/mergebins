@@ -1,0 +1,37 @@
+[Unit]
+Description=BIN Search Bot Production Monitor
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/mergebins
+Environment=PYTHONPATH=/home/ubuntu/mergebins
+Environment=WEB_API_BASE_URL=https://bin-search-api.arturovillanueva1994.workers.dev
+Environment=MONITOR_INTERVAL_SECONDS=60
+Environment=ALERT_COOLDOWN_MINUTES=15
+Environment=MAX_RESPONSE_TIME_SECONDS=5.0
+Environment=ENABLE_EMAIL_ALERTS=false
+Environment=ENABLE_WEBHOOK_ALERTS=true
+Environment=ALERT_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+
+ExecStart=/usr/bin/python3 /home/ubuntu/mergebins/monitoring/production_monitor.py --daemon
+Restart=always
+RestartSec=30
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=binsearch-monitor
+
+# Security
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/home/ubuntu/mergebins/data
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

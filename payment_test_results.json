@@ -1,0 +1,44 @@
+[
+  {
+    "test": "API Connectivity",
+    "status": "PASS",
+    "details": "API responding on https://bin-search-api.arturovillanueva1994.workers.dev",
+    "timestamp": "2025-11-17T18:14:54.131492"
+  },
+  {
+    "test": "Bot Authentication",
+    "status": "FAIL",
+    "details": "Auth error: 200, message='Attempt to decode JSON with unexpected mimetype: text/html', url='https://bin-search-api.arturovillanueva1994.workers.dev/api/v1/auth/verify-bot'",
+    "timestamp": "2025-11-17T18:14:54.208711"
+  },
+  {
+    "test": "User Creation",
+    "status": "FAIL",
+    "details": "Failed to create/authenticate user",
+    "timestamp": "2025-11-17T18:14:54.270958"
+  },
+  {
+    "test": "Payment Creation",
+    "status": "FAIL",
+    "details": "Payment creation error: 200, message='Attempt to decode JSON with unexpected mimetype: text/html', url='https://bin-search-api.arturovillanueva1994.workers.dev/api/v1/payments/create-crypto-payment'",
+    "timestamp": "2025-11-17T18:14:54.374812"
+  },
+  {
+    "test": "Premium Status Sync",
+    "status": "FAIL",
+    "details": "Failed to sync premium status",
+    "timestamp": "2025-11-17T18:14:54.440481"
+  },
+  {
+    "test": "Webhook Simulation",
+    "status": "PASS",
+    "details": "Payment confirmation webhook processed",
+    "timestamp": "2025-11-17T18:14:54.535800"
+  },
+  {
+    "test": "Subscription Activation",
+    "status": "FAIL",
+    "details": "Activation error: 200, message='Attempt to decode JSON with unexpected mimetype: text/html', url='https://bin-search-api.arturovillanueva1994.workers.dev/api/v1/subscriptions/activate'",
+    "timestamp": "2025-11-17T18:14:54.734345"
+  }
+]

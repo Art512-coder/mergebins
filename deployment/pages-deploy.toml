@@ -1,0 +1,98 @@
+# Cloudflare Pages deployment configuration for CryptoBinChecker.cc
+# Enhanced version with all features and monitoring
+
+[build]
+command = "npm run build"
+destination = "dist"
+
+[build.environment]
+NODE_VERSION = "18"
+NPM_VERSION = "9"
+ENVIRONMENT = "production"
+
+# Environment variables
+[env.production]
+VITE_API_BASE_URL = "https://api.cryptobinchecker.cc"
+VITE_ENVIRONMENT = "production"
+VITE_DEBUG = "false"
+VITE_VERSION = "2.0"
+
+# Payment integration
+VITE_NOWPAYMENTS_API_KEY = "your-nowpayments-api-key"
+VITE_COINBASE_API_KEY = "your-coinbase-api-key"
+VITE_TELEGRAM_BOT_USERNAME = "cryptobinchecker_bot"
+
+# Analytics
+VITE_GOOGLE_ANALYTICS_ID = "G-XXXXXXXXXX"
+VITE_CLOUDFLARE_ANALYTICS_TOKEN = "your-cf-analytics-token"
+
+[env.staging]
+VITE_API_BASE_URL = "https://staging-api.cryptobinchecker.cc"
+VITE_ENVIRONMENT = "staging"
+VITE_DEBUG = "true"
+VITE_VERSION = "2.0-staging"
+
+# Redirects and rewrites
+[[redirects]]
+from = "/api/*"
+to = "https://api.cryptobinchecker.cc/api/:splat"
+status = 200
+force = true
+
+[[redirects]]
+from = "/webhook/*"
+to = "https://api.cryptobinchecker.cc/webhook/:splat"
+status = 200
+force = true
+
+[[redirects]]
+from = "/health"
+to = "https://api.cryptobinchecker.cc/health"
+status = 200
+force = true
+
+# SPA routing
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
+
+# Headers for security
+[[headers]]
+for = "/*"
+
+[headers.values]
+X-Frame-Options = "DENY"
+X-Content-Type-Options = "nosniff"
+X-XSS-Protection = "1; mode=block"
+Referrer-Policy = "strict-origin-when-cross-origin"
+Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.cryptobinchecker.cc https://blockchain.info https://api.etherscan.io"
+
+# Cache headers for assets
+[[headers]]
+for = "/assets/*"
+
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache headers for static files
+[[headers]]
+for = "/*.js"
+
+[headers.values]
+Cache-Control = "public, max-age=86400"
+
+[[headers]]
+for = "/*.css"
+
+[headers.values]
+Cache-Control = "public, max-age=86400"
+
+# API proxy headers
+[[headers]]
+for = "/api/*"
+
+[headers.values]
+Cache-Control = "no-cache, no-store, must-revalidate"

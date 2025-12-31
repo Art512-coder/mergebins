@@ -1,0 +1,40 @@
+security_tests/
+├── __init__.py
+├── run_security_tests.py           # Main test runner
+├── config.py                       # Test configuration
+├── attack_simulations/
+│   ├── __init__.py
+│   ├── attack_simulator.py         # Main attack simulation class
+│   ├── bin_scraping_tests.py       # BIN database scraping attacks
+│   ├── card_abuse_tests.py         # Card generation abuse tests
+│   ├── crypto_scanning_tests.py    # Crypto wallet scanning attacks
+│   └── webhook_attack_tests.py     # Fake webhook attacks
+├── security_validation/
+│   ├── __init__.py
+│   ├── validation_tests.py         # Legitimate user access tests
+│   ├── rate_limit_tests.py         # Rate limit functionality tests
+│   └── authentication_tests.py     # Auth system tests
+├── performance_tests/
+│   ├── __init__.py
+│   ├── performance_tests.py        # Performance under load tests
+│   ├── load_testing.py             # Load testing utilities
+│   └── stress_testing.py           # Stress testing scenarios
+├── webhook_tests/
+│   ├── __init__.py
+│   ├── coinbase_webhook_tests.py   # Coinbase webhook security tests
+│   ├── crypto_webhook_tests.py     # Generic crypto webhook tests
+│   └── webhook_security_tests.py   # Webhook signature validation
+├── crypto_tests/
+│   ├── __init__.py
+│   ├── crypto_balance_tests.py     # Crypto balance checking tests
+│   ├── crypto_security_tests.py    # Crypto-specific security tests
+│   └── crypto_rate_limit_tests.py  # Crypto rate limiting tests
+├── monitoring_tests/
+│   ├── __init__.py
+│   ├── logging_tests.py            # Security event logging tests
+│   ├── alerting_tests.py           # Security alerting tests
+│   └── forensics_tests.py          # Security forensics tests
+└── reports/
+    ├── test_results_template.html   # HTML report template
+    ├── security_report_generator.py # Generate security reports
+    └── README.md                    # Test documentation

@@ -1,0 +1,36 @@
+# BIN Search Bot Project Requirements
+
+# Telegram Bot Core
+python-telegram-bot==20.7
+
+# Data Processing
+pandas==2.2.2
+
+# Database
+redis==5.0.8
+psycopg2-binary==2.9.9
+
+# HTTP Client
+aiohttp==3.10.5
+
+# Configuration
+python-dotenv==1.0.1
+
+# Cloud Services
+google-cloud-storage==2.18.2
+google-cloud-secret-manager==2.20.2
+
+# Web Framework
+flask==3.0.3
+gunicorn==23.0.0
+
+# Email
+sendgrid==6.11.0
+
+# Image Processing
+pillow==10.4.0
+
+# Development Dependencies
+pytest==7.4.4
+black==23.12.1
+flake8==7.0.0

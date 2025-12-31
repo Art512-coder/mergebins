@@ -1,0 +1,10 @@
+Files to consider deleting for cleanup:
+- start_bot.bat (old Windows start script, not needed for Cloud Run)
+- binsearchccgbot.service (systemd service, not needed for GCP)
+- deploy.sh (review if not used for Cloud Run)
+- test_bot.py (review if not used for new tests)
+- merge_bin_databases.py (keep only if you need to merge CSVs)
+- ipn_service.py (keep if used for payment notifications)
+- requirements_clean.txt (old requirements, now replaced)
+
+Please confirm which files you want to delete, or edit this list as needed.

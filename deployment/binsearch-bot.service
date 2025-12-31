@@ -1,0 +1,31 @@
+[Unit]
+Description=BIN Search Telegram Bot
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+User=nobody
+WorkingDirectory=/opt/mergebins
+EnvironmentFile=/opt/mergebins/.env
+Environment=PYTHONPATH=/opt/mergebins
+ExecStart=/opt/mergebins/.venv/bin/python /opt/mergebins/run_production_bot.py
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=binsearch-bot
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/mergebins/logs
+
+# Resource limits
+LimitNOFILE=1024
+MemoryLimit=512M
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,48 @@
+name = "cryptobinchecker-cc"
+main = "../src/index_auth.js"
+compatibility_date = "2025-11-23"
+workers_dev = true
+account_id = "c92ca2be5322f804d38d9976eb8efb0c"
+
+# Custom Domain Routes (commented out for initial deployment)
+# routes = [
+#   { pattern = "cryptobinchecker.cc/api/*", zone_id = "8a9ac9b5ee0470b085feb898290254f3" },
+#   { pattern = "www.cryptobinchecker.cc/api/*", zone_id = "8a9ac9b5ee0470b085feb898290254f3" }
+# ]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "cryptobinchecker-db"
+database_id = "e8e3af39-17e0-4c36-bebe-efe510a973af"
+
+# [[kv_namespaces]]
+# binding = "CACHE"
+# id = "your-kv-namespace-id"
+
+# [[r2_buckets]]
+# binding = "ASSETS"
+# bucket_name = "cryptobinchecker-assets"
+
+[vars]
+ENVIRONMENT = "production"
+VERSION = "2.0"
+API_RATE_LIMIT = "100"
+CRYPTO_API_RATE_LIMIT = "50"
+FREE_DAILY_LIMIT = "50"
+PREMIUM_DAILY_LIMIT = "1000"
+CORS_ORIGINS = "https://dd0e40f5.cryptobinchecker-cc.pages.dev,https://c20446cc.cryptobinchecker-cc.pages.dev,https://cryptobinchecker.cc,https://www.cryptobinchecker.cc"
+
+[env.production.vars]
+ENVIRONMENT = "production"
+DEBUG = "false"
+CORS_ORIGINS = "https://dd0e40f5.cryptobinchecker-cc.pages.dev,https://c20446cc.cryptobinchecker-cc.pages.dev,https://cryptobinchecker.cc,https://www.cryptobinchecker.cc"
+
+[env.staging.vars]
+ENVIRONMENT = "staging"
+DEBUG = "true"
+CORS_ORIGINS = "*"
+
+[env.development.vars]
+ENVIRONMENT = "development"
+DEBUG = "true"
+CORS_ORIGINS = "*"

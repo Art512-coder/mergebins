@@ -1,0 +1,81 @@
+"""
+Configuration for security tests.
+Adjust these values based on your specific setup and requirements.
+"""
+
+# Test Configuration
+TEST_CONFIG = {
+    "base_url": "http://localhost:8000",
+    "production_url": "https://your-domain.com",
+    
+    # Rate Limit Expectations
+    "expected_limits": {
+        "bin_lookup_per_minute": 60,
+        "card_generation_per_ip_per_day": 3,
+        "crypto_checks_per_ip_per_day": 10,
+    },
+    
+    # Security Thresholds
+    "security_thresholds": {
+        "max_bot_requests_allowed": 0,  # Should block all bot requests
+        "max_fake_webhooks_allowed": 0,  # Should block all fake webhooks
+        "max_rapid_requests_allowed": 10,  # Before triggering security
+    },
+    
+    # Performance Expectations
+    "performance_targets": {
+        "bin_lookup_avg_response_ms": 100,
+        "card_generation_avg_response_ms": 200,
+        "crypto_check_avg_response_ms": 500,
+    },
+    
+    # Test Data
+    "test_bins": ["411111", "424242", "555555", "378282", "340000"],
+    "test_crypto_addresses": {
+        "bitcoin": ["1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"],
+        "ethereum": ["0x32Be343B94f860124dC4fEe278FDCBD38C102D88"]
+    }
+}
+
+# Attack Simulation Profiles
+ATTACK_PROFILES = {
+    "light_attack": {
+        "requests_per_second": 5,
+        "duration_seconds": 30,
+        "concurrent_connections": 5
+    },
+    "moderate_attack": {
+        "requests_per_second": 20,
+        "duration_seconds": 60,
+        "concurrent_connections": 10
+    },
+    "heavy_attack": {
+        "requests_per_second": 100,
+        "duration_seconds": 120,
+        "concurrent_connections": 50
+    }
+}
+
+# Security Test Cases
+SECURITY_TEST_CASES = [
+    {
+        "name": "Bot User Agent Detection",
+        "headers": {"User-Agent": "curl/7.68.0"},
+        "expected_status": 403
+    },
+    {
+        "name": "Missing User Agent",
+        "headers": {},
+        "expected_status": 403
+    },
+    {
+        "name": "Suspicious Request Pattern",
+        "pattern": "rapid_identical_requests",
+        "expected_status": 429
+    },
+    {
+        "name": "Fake Webhook Without Signature",
+        "endpoint": "/api/v1/webhooks/coinbase-commerce",
+        "expected_status": 401
+    }
+]

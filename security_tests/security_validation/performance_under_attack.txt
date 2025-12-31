@@ -1,0 +1,116 @@
+"""
+Test how your service performs under various attack loads.
+Ensures the service remains available for legitimate users during attacks.
+"""
+
+import asyncio
+import aiohttp
+import time
+import statistics
+from concurrent.futures import ThreadPoolExecutor
+from typing import List, Dict
+
+class PerformanceUnderAttackTests:
+    def __init__(self, base_url: str = "http://localhost:8000"):
+        self.base_url = base_url
+    
+    async def measure_response_times(self, endpoint: str, requests: int = 50, concurrent: int = 10):
+        """Measure response times under load."""
+        print(f"📊 Measuring performance: {endpoint}")
+        
+        response_times = []
+        status_codes = {}
+        
+        async def make_request(session, semaphore):
+            async with semaphore:
+                start_time = time.time()
+                try:
+                    async with session.get(f"{self.base_url}{endpoint}") as response:
+                        await response.read()  # Ensure full response is received
+                        response_time = time.time() - start_time
+                        response_times.append(response_time)
+                        status_codes[response.status] = status_codes.get(response.status, 0) + 1
+                except Exception as e:
+                    response_time = time.time() - start_time
+                    response_times.append(response_time)
+                    status_codes['error'] = status_codes.get('error', 0) + 1
+        
+        # Create semaphore to limit concurrent requests
+        semaphore = asyncio.Semaphore(concurrent)
+        
+        async with aiohttp.ClientSession() as session:
+            tasks = [make_request(session, semaphore) for _ in range(requests)]
+            await asyncio.gather(*tasks)
+        
+        # Calculate statistics
+        if response_times:
+            avg_time = statistics.mean(response_times)
+            median_time = statistics.median(response_times)
+            p95_time = sorted(response_times)[int(0.95 * len(response_times))]
+            
+            print(f"   Average: {avg_time:.3f}s")
+            print(f"   Median: {median_time:.3f}s")  
+            print(f"   95th percentile: {p95_time:.3f}s")
+            print(f"   Status codes: {status_codes}")
+        
+        return {
+            'avg_time': avg_time if response_times else 0,
+            'median_time': median_time if response_times else 0,
+            'p95_time': p95_time if response_times else 0,
+            'status_codes': status_codes
+        }
+
+    async def test_bin_lookup_performance(self):
+        """Test BIN lookup performance under load."""
+        return await self.measure_response_times("/api/v1/bins/lookup/411111", 100, 20)
+    
+    async def test_card_generation_performance(self):
+        """Test card generation performance (should be rate limited)."""
+        print("📊 Testing Card Generation under load (should be rate limited)...")
+        
+        # This will hit rate limits quickly, testing how gracefully it handles it
+        response_times = []
+        status_codes = {}
+        
+        async with aiohttp.ClientSession() as session:
+            for i in range(20):  # Try 20 card generations rapidly
+                start_time = time.time()
+                try:
+                    payload = {"bin": "411111", "include_avs": False}
+                    async with session.post(
+                        f"{self.base_url}/api/v1/cards/generate",
+                        json=payload
+                    ) as response:
+                        await response.read()
+                        response_time = time.time() - start_time
+                        response_times.append(response_time)
+                        status_codes[response.status] = status_codes.get(response.status, 0) + 1
+                except Exception as e:
+                    response_time = time.time() - start_time
+                    response_times.append(response_time)
+                    status_codes['error'] = status_codes.get('error', 0) + 1
+        
+        if response_times:
+            print(f"   Average response time: {statistics.mean(response_times):.3f}s")
+            print(f"   Status codes: {status_codes}")
+            print(f"   Rate limited responses: {status_codes.get(429, 0)}")
+
+async def run_performance_tests():
+    """Run all performance tests."""
+    print("⚡ Starting Performance Under Attack Tests...")
+    print("=" * 50)
+    
+    tester = PerformanceUnderAttackTests()
+    
+    # Test BIN lookup performance
+    print("\n1. BIN Lookup Performance Test")
+    bin_results = await tester.test_bin_lookup_performance()
+    
+    # Test card generation performance  
+    print("\n2. Card Generation Performance Test")
+    await tester.test_card_generation_performance()
+    
+    print("\n✅ Performance tests completed!")
+
+if __name__ == "__main__":
+    asyncio.run(run_performance_tests())

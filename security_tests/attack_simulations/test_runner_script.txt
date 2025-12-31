@@ -1,0 +1,79 @@
+"""
+Main test runner that executes all security tests.
+"""
+
+import asyncio
+import sys
+import os
+from datetime import datetime
+
+# Add the security_tests directory to Python path
+sys.path.append(os.path.dirname(__file__))
+
+from attack_simulations.attack_simulator import run_attack_simulations
+from security_validation.validation_tests import run_security_validation  
+from performance_tests.performance_tests import run_performance_tests
+
+async def run_all_security_tests():
+    """Run all security test suites."""
+    print("🛡️ CCG Bot Security Test Suite")
+    print("=" * 60)
+    print(f"Started at: {datetime.now()}")
+    print(f"Testing endpoint: http://localhost:8000")
+    print("=" * 60)
+    
+    try:
+        # 1. Security Validation (ensure legitimate users work)
+        print("\n🔍 PHASE 1: Security Validation Tests")
+        print("Ensuring legitimate users can access all features...")
+        await run_security_validation()
+        
+        print("\n⏱️  Waiting 5 seconds before attack simulations...")
+        await asyncio.sleep(5)
+        
+        # 2. Attack Simulations (test security blocking)
+        print("\n🚨 PHASE 2: Attack Simulation Tests")
+        print("Testing security against various attack vectors...")
+        await run_attack_simulations()
+        
+        print("\n⏱️  Waiting 5 seconds before performance tests...")
+        await asyncio.sleep(5)
+        
+        # 3. Performance Tests (service availability under attack)
+        print("\n⚡ PHASE 3: Performance Under Attack Tests")
+        print("Testing service performance and availability...")
+        await run_performance_tests()
+        
+        print("\n" + "=" * 60)
+        print("✅ ALL SECURITY TESTS COMPLETED!")
+        print("=" * 60)
+        
+        print("\n📋 SECURITY TEST SUMMARY:")
+        print("1. ✅ Legitimate user access - Should work normally")
+        print("2. 🛡️  Attack blocking - Should reject malicious requests")
+        print("3. ⚡ Performance - Should maintain availability under load")
+        print("4. 🚨 Check logs for any security events logged")
+        
+    except Exception as e:
+        print(f"\n❌ Security test suite failed: {e}")
+        return False
+    
+    return True
+
+if __name__ == "__main__":
+    # Make sure the backend is running
+    print("⚠️  IMPORTANT: Make sure your backend server is running on http://localhost:8000")
+    print("   Run: python webapp/backend/main_cloudflare.py")
+    print()
+    
+    input("Press Enter when your backend server is ready...")
+    
+    # Run all tests
+    success = asyncio.run(run_all_security_tests())
+    
+    if success:
+        print("\n🎉 Security testing completed successfully!")
+        exit(0)
+    else:
+        print("\n💥 Security testing failed!")
+        exit(1)

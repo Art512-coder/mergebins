@@ -1,0 +1,26 @@
+[Unit]
+Description=Independent Telegram BIN Checker Bot
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/mergebins
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=/opt/mergebins/.env
+ExecStart=/usr/bin/python3 /opt/mergebins/telegram_bot.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/mergebins/logs
+
+[Install]
+WantedBy=multi-user.target

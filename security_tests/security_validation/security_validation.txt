@@ -1,0 +1,138 @@
+"""
+Validate that legitimate users can still access all features properly.
+Security shouldn't block legitimate usage.
+"""
+
+import asyncio
+import aiohttp
+import time
+from typing import Dict, List
+
+class SecurityValidationTests:
+    def __init__(self, base_url: str = "http://localhost:8000"):
+        self.base_url = base_url
+        self.session = None
+    
+    async def __aenter__(self):
+        self.session = aiohttp.ClientSession()
+        return self
+    
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        if self.session:
+            await self.session.close()
+
+    async def test_legitimate_bin_lookup(self):
+        """Test that normal BIN lookups work for legitimate users."""
+        print("✅ Testing Legitimate BIN Lookup...")
+        
+        test_bins = ["411111", "424242", "555555", "378282"]
+        
+        for bin_num in test_bins:
+            try:
+                async with self.session.get(
+                    f"{self.base_url}/api/v1/bins/lookup/{bin_num}",
+                    headers={
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                        'Accept': 'application/json'
+                    }
+                ) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        print(f"   ✅ BIN {bin_num}: Success - {data.get('brand', 'Unknown')}")
+                    else:
+                        print(f"   ❌ BIN {bin_num}: Failed with status {response.status}")
+                
+                # Human-like timing
+                await asyncio.sleep(random.uniform(1, 3))
+                
+            except Exception as e:
+                print(f"   ❌ BIN {bin_num}: Error - {e}")
+
+    async def test_legitimate_card_generation(self):
+        """Test that normal card generation works within limits."""
+        print("✅ Testing Legitimate Card Generation...")
+        
+        for i in range(3):  # Should allow 3 per IP
+            try:
+                payload = {
+                    "bin": "411111",
+                    "include_avs": False
+                }
+                
+                async with self.session.post(
+                    f"{self.base_url}/api/v1/cards/generate",
+                    json=payload,
+                    headers={
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                        'Content-Type': 'application/json'
+                    }
+                ) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        print(f"   ✅ Card Gen {i+1}: Success - {data.get('number', 'Unknown')[:4]}****")
+                    else:
+                        print(f"   ❌ Card Gen {i+1}: Failed with status {response.status}")
+                
+                # Human-like timing
+                await asyncio.sleep(random.uniform(2, 5))
+                
+            except Exception as e:
+                print(f"   ❌ Card Gen {i+1}: Error - {e}")
+
+    async def test_legitimate_crypto_check(self):
+        """Test legitimate crypto wallet checking."""
+        print("✅ Testing Legitimate Crypto Wallet Check...")
+        
+        legitimate_wallets = [
+            {"address": "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa", "type": "bitcoin"},  # Genesis block
+            {"address": "0x32Be343B94f860124dC4fEe278FDCBD38C102D88", "type": "ethereum"}
+        ]
+        
+        for wallet in legitimate_wallets:
+            try:
+                payload = {
+                    "address": wallet["address"],
+                    "crypto_type": wallet["type"]
+                }
+                
+                async with self.session.post(
+                    f"{self.base_url}/api/v1/crypto/check-balance",
+                    json=payload,
+                    headers={
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                        'Content-Type': 'application/json'
+                    }
+                ) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        print(f"   ✅ {wallet['type'].capitalize()}: Success - Balance: {data.get('balance', 'Unknown')}")
+                    else:
+                        print(f"   ❌ {wallet['type'].capitalize()}: Failed with status {response.status}")
+                
+                # Human-like timing
+                await asyncio.sleep(random.uniform(3, 6))
+                
+            except Exception as e:
+                print(f"   ❌ {wallet['type'].capitalize()}: Error - {e}")
+
+# Test runner
+async def run_security_validation():
+    print("🔍 Starting Security Validation Tests...")
+    print("These tests ensure legitimate users aren't blocked.")
+    print("=" * 50)
+    
+    async with SecurityValidationTests() as validator:
+        await validator.test_legitimate_bin_lookup()
+        print()
+        
+        await validator.test_legitimate_card_generation()
+        print()
+        
+        await validator.test_legitimate_crypto_check()
+        print()
+    
+    print("✅ Security validation completed!")
+
+if __name__ == "__main__":
+    import random
+    asyncio.run(run_security_validation())

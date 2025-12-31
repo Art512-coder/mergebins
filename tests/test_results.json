@@ -1,0 +1,228 @@
+{
+  "stats": {
+    "status_code": 200,
+    "response_time_ms": 667.4,
+    "success": true,
+    "data": {
+      "total_records": 1,
+      "top_brands": [
+        {
+          "brand": "VISA",
+          "count": 1
+        }
+      ],
+      "database_name": "bin-search-db",
+      "last_updated": "2025-11-03T08:18:11.410Z"
+    },
+    "headers": {
+      "Date": "Mon, 03 Nov 2025 08:18:11 GMT",
+      "Content-Type": "application/json",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Vary": "accept-encoding",
+      "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=LFOIqPYLQKeqPBw5gpYtDjYJz1Y%2Bs2XkI2uS34tXt18amCrRFHK7NiGb0%2FK8o5Yjochcx8%2Fuq%2BTprKQMdyVpdIjVlQrRUFHmh1zFRQc0ArXYlOWHeq0pcWuXw8GBWWEdvtfAprEmQiwdAs2NfiGOfOTx4YFqWbm8GcQI\"}]}",
+      "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "Content-Encoding": "zstd",
+      "Server": "cloudflare",
+      "CF-RAY": "998a70847cd4983e-EWR",
+      "alt-svc": "h3=\":443\"; ma=86400"
+    }
+  },
+  "cors": {
+    "status_code": 200,
+    "response_time_ms": 79.54,
+    "success": true,
+    "data": "",
+    "headers": {
+      "Date": "Mon, 03 Nov 2025 08:18:11 GMT",
+      "Content-Length": "0",
+      "Connection": "keep-alive",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Vary": "accept-encoding",
+      "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=WT7XJx7BQVjYFXKZtitXuVHgcoAYZ6ynejQJzZ84UqGDIDfSiZJ3OduiiM0PSxqAHTaHeJsA5jLx1TwzqiTKKVgcOXm6a%2BmKx1uGvzudj9JTdCwFrSN2O4UsE%2BvSXvnSG%2B%2B7YBMiphX2xvsgTZuGSmhSYRDo8XhGSpTM\"}]}",
+      "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "Server": "cloudflare",
+      "CF-RAY": "998a7085de33983e-EWR",
+      "alt-svc": "h3=\":443\"; ma=86400"
+    }
+  },
+  "bin_valid": {
+    "status_code": 404,
+    "response_time_ms": 199.56,
+    "success": false,
+    "data": {
+      "error": "BIN not found",
+      "bin": "424242"
+    },
+    "headers": {
+      "Date": "Mon, 03 Nov 2025 08:18:11 GMT",
+      "Content-Type": "application/json",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Vary": "accept-encoding",
+      "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=83SINplNabGTanI1SopKlQs3RCkRQ4S2JqFJblFo0KnNMfrpzpZgLe86Wx1lQ9kKTxuWcSWxzZo3fjw4yj%2Fd64PIEWqYFzxjRW12lRQE%2FniRJJtyCdZ82YG3uLePqlaDO8iEV7y2Wlz28znyvowliliHfmt1%2BsfvvBAr\"}]}",
+      "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "Content-Encoding": "zstd",
+      "Server": "cloudflare",
+      "CF-RAY": "998a7086af12983e-EWR",
+      "alt-svc": "h3=\":443\"; ma=86400"
+    }
+  },
+  "bin_invalid": {
+    "status_code": 404,
+    "response_time_ms": 138.94,
+    "success": false,
+    "data": {
+      "error": "BIN not found",
+      "bin": "000000"
+    },
+    "headers": {
+      "Date": "Mon, 03 Nov 2025 08:18:11 GMT",
+      "Content-Type": "application/json",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Vary": "accept-encoding",
+      "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=L5P9w2XDPghvAcD3b40TgeetQuGSLrnQGgdOuAtCQrTYhxprJj7GJq9qdvzvsndCohWlINlZ3z%2F4OoraWjNI03AccLJUD2NzJq9dOHrv2fEmCwPT2MBh3POm5WVpXJB70bH%2Bfn5%2B61fQ1GWVZ6OJo8pZS%2B9lNX7ju6Yf\"}]}",
+      "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "Content-Encoding": "zstd",
+      "Server": "cloudflare",
+      "CF-RAY": "998a70879ffc983e-EWR",
+      "alt-svc": "h3=\":443\"; ma=86400"
+    }
+  },
+  "bin_short": {
+    "status_code": 400,
+    "response_time_ms": 137.73,
+    "success": false,
+    "data": {
+      "error": "Invalid BIN number. Must be at least 6 digits."
+    },
+    "headers": {
+      "Date": "Mon, 03 Nov 2025 08:18:11 GMT",
+      "Content-Type": "application/json",
+      "Content-Length": "58",
+      "Connection": "keep-alive",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Vary": "accept-encoding",
+      "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=Ls9xs%2FKLzK1Xv0LErgOkZzYe1bDpOA0bZUGqbOwnpG5L%2B688GwE8FpI5qXf2jEH5JOasnDM1wySi8tW%2BdboazBaDC0qioYwjFGLE3z2R1az3%2FNeaIlGJX2kSjocAZP6IbVteEGVjcNI0uPy7mha3S8J5KrUm%2FZ%2B8GGR7\"}]}",
+      "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "Server": "cloudflare",
+      "CF-RAY": "998a7088c92f983e-EWR",
+      "alt-svc": "h3=\":443\"; ma=86400"
+    }
+  },
+  "search_visa": {
+    "status_code": 200,
+    "response_time_ms": 124.52,
+    "success": true,
+    "data": {
+      "query": "visa",
+      "results": [
+        {
+          "bin": "400000",
+          "brand": "VISA",
+          "type": "CREDIT",
+          "category": "STANDARD",
+          "issuer": "TEST BANK",
+          "country": "UNITED STATES",
+          "bank_phone": "1-800-123-4567",
+          "bank_url": "https://testbank.com",
+          "created_at": "2025-09-21 07:55:18"
+        }
+      ],
+      "count": 1,
+      "limit": 10
+    },
+    "headers": {
+      "Date": "Mon, 03 Nov 2025 08:18:12 GMT",
+      "Content-Type": "application/json",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Vary": "accept-encoding",
+      "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=T7A%2FaDMGjOD8blLkIzJKPj%2BL3NxtI9x0G0vs7g5drr5tdoaVnqnYdP5UEutkBNVNhXlu8TRi5YgBFFdR4lYpwjFSjDwHii%2Fw1Xy1J9LV3Iln88An0NEMqSt5aQnVzAb87u9pC8bOiDgQSrpIFdCHjgaTKriEk4y16sbd\"}]}",
+      "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "Content-Encoding": "zstd",
+      "Server": "cloudflare",
+      "CF-RAY": "998a70890975983e-EWR",
+      "alt-svc": "h3=\":443\"; ma=86400"
+    }
+  },
+  "search_empty": {
+    "status_code": 400,
+    "response_time_ms": 332.65,
+    "success": false,
+    "data": {
+      "error": "Query parameter \"q\" is required and must be at least 2 characters."
+    },
+    "headers": {
+      "Date": "Mon, 03 Nov 2025 08:18:12 GMT",
+      "Content-Type": "application/json",
+      "Content-Length": "80",
+      "Connection": "keep-alive",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Vary": "accept-encoding",
+      "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=lwKBzhsMRHxN4KgwwXIEA42cwgNfKsW6DxB9Y5qwC1z751ob7euEnqEw0eKHaRWx82Y8hjD2B%2BIVKvjFWHdaoZo1zHviz9oLG7QQZ64xUbs8FpIqMlvMaZpdeJ6Ps4koZ6fgBmjM0j6a%2BsXzT%2BJrYfo9C29SWkeCeyyR\"}]}",
+      "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "Server": "cloudflare",
+      "CF-RAY": "998a708bac80983e-EWR",
+      "alt-svc": "h3=\":443\"; ma=86400"
+    }
+  },
+  "search_bank": {
+    "status_code": 200,
+    "response_time_ms": 118.76,
+    "success": true,
+    "data": {
+      "query": "bank",
+      "results": [
+        {
+          "bin": "400000",
+          "brand": "VISA",
+          "type": "CREDIT",
+          "category": "STANDARD",
+          "issuer": "TEST BANK",
+          "country": "UNITED STATES",
+          "bank_phone": "1-800-123-4567",
+          "bank_url": "https://testbank.com",
+          "created_at": "2025-09-21 07:55:18"
+        }
+      ],
+      "count": 1,
+      "limit": 10
+    },
+    "headers": {
+      "Date": "Mon, 03 Nov 2025 08:18:12 GMT",
+      "Content-Type": "application/json",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Vary": "accept-encoding",
+      "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=zOAceS7ARVdWmdLhMERmuXOM1aegJngDu0GhlHUKDnt1Zrx0E4TAfyYkNDxiXHppgNaWA%2FYAjYl1uVhUdTSWD8g74lAz%2FnjmxKZP%2Bpo7Tno9fLZnwcRa1RSBR9EY1yEZs06oWEL%2BtAuNw%2F1pRnuZ9Eaz5B%2F9UacI5HMz\"}]}",
+      "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+      "Content-Encoding": "zstd",
+      "Server": "cloudflare",
+      "CF-RAY": "998a708c0cfd983e-EWR",
+      "alt-svc": "h3=\":443\"; ma=86400"
+    }
+  }
+}
