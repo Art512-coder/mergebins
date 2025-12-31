@@ -134,4 +134,11 @@ app.use(router)
 const authStore = useAuthStore()
 authStore.initAuth()
 
-app.mount('#app')
+// Ensure single mount - clear any existing app first
+const existingApp = document.getElementById('app')
+if (existingApp && existingApp.__vue_app__) {
+  // App already mounted, don't mount again
+  console.warn('App already mounted, skipping duplicate mount')
+} else {
+  app.mount('#app')
+}
