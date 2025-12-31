@@ -1,7 +1,7 @@
 <template>
-  <div id="app" class="min-h-screen bg-gray-950 text-gray-100">
-    <!-- Navigation -->
-    <nav v-if="authStore.isAuthenticated" class="sticky top-0 z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800">
+  <div id="app" class="min-h-screen bg-gray-950 text-gray-100 flex flex-col">
+    <!-- Navigation - Only render once for authenticated users -->
+    <nav v-if="authStore.isAuthenticated" key="navbar-auth" class="sticky top-0 z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
           <!-- Logo -->
@@ -56,7 +56,7 @@
 
     <!-- Main Content -->
     <main class="flex-1">
-      <router-view />
+      <router-view :key="$route.fullPath" />
     </main>
 
     <!-- Toast Notifications -->
